@@ -1,0 +1,66 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /config/grafana/{conf,data/plugins,log,plugins-bundled}
+mkdir -p /config/influxdbv2/engine/{data,meta,wal,logs} \
+	&& mkdir -p /config/telegraf \
+    && rm -f /config/influxdbv2/influxd.pid \
+    && rm -f /config/influxdbv2/influxd.log \
+    #&& cp -n /influxdb.conf /config/influxdb/
+
+# if exists
+#if [ ! -f /config/influxdb/influxdb.conf ]; then
+if [ ! -f /config/influxdbv2/config.yaml ]; then
+echo "influxdb config.yaml not found in config folder... copying it from /defaults. This is normal when you start this container for the first time"
+
+#setup influx
+#s6-setuidgid abc influx setup \
+#  --org docker \
+#  --bucket container \
+#  --username docker \
+#  --password letmeinplease \
+#  --force
+  
+#cp /root/.influxdbv2 /config
+#cp -R /defaults/influxdb /config
+cp -R /defaults/influxdb/config.yaml /config/influxdbv2
+#create influxdb user
+#curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER MIUSUARIO WITH PASSWORD 'AQUITUPASSWORD' WITH ALL PRIVILEGES"
+else
+echo "influxdb.conf exists.."
+fi
+
+# if exists
+if [ ! -f /config/telegraf/telegraf.conf ]; then
+
+echo "telegraf.conf not found in config folder.. copying it from /temp. This is normal when you start this container for the first time"
+cp -R /defaults/telegraf /config
+
+else
+echo "telegraf.conf exists.."
+fi
+
+#sed -i "s|:8086|:$INFLUXDB_HTTP_PORT|g" '/config/influxdb/influxdb.conf'
+#sed -i "s|:8088|:$INFLUXDB_RPC_PORT|g" '/config/influxdb/influxdb.conf'
+echo '[info] influxdb fixed.'
+
+# if exists
+if [ ! -f /config/grafana/conf/grafana.ini ]; then
+echo "not exists"
+#cp -R /usr/share/grafana/conf /config/grafana
+
+cp /defaults/grafana.ini /config/grafana/conf/grafana.ini
+cp '/defaults/DO NOT EDIT defaults.ini.info' '/config/grafana/conf/DO NOT EDIT defaults.ini.info'
+cp '/defaults/HowToGrafanaCli.info' '/config/grafana/conf/HowToGrafanaCli.info'
+cp -R /usr/share/grafana/conf/provisioning /config/grafana/conf
+cp -R /usr/share/grafana/conf/defaults.ini /config/grafana/conf/defaults.ini
+#cp -R /usr/share/grafana/public /config/grafana/public
+# ln -s /usr/share/grafana/public /config/grafana/public
+else
+echo "grafana defaults.ini exists"
+fi
+
+# fix permissions
+chown -R abc:abc \
+	/config \
+	/usr/local/bin/influx \
+	/usr/local/bin/influxd

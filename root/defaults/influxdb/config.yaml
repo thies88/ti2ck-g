@@ -1,0 +1,3 @@
+tls-cert: /config/keys/cert.crt
+tls-key: /config/keys/cert.key
+nats-port: 4222

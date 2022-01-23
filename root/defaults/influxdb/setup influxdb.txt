@@ -1,0 +1,39 @@
+# after initial start dont forget to create a user. without this telegraf is unable to create an DB
+
+# create database user
+influx -ssl -unsafeSsl -execute "CREATE USER telegraf WITH PASSWORD 'telegraf' WITH ALL PRIVILEGES"
+
+change user password:
+influx username password -n newpassword
+
+###### usefull commands #####
+
+create user:
+CREATE USER changeme WITH PASSWORD 'changeme' WITH ALL PRIVILEGES
+
+test connection with https:
+influx -ssl -unsafeSsl
+
+connect with user and password:
+influx -username telegraf -password password -ssl -unsafeSsl
+
+use DB:
+use dbname
+
+Clean db (deletes all measurements and series):
+influx --ssl --unsafeSsl -username telegraf -password password --execute 'show measurements' --database=telegraf | grep "^vsphere" | xargs -I{} influx --ssl --unsafeSsl -username telegraf -password password --database=telegraf --execute 'drop measurement "{}"'
+
+
+Influxdb2:
+
+# enable influxql
+curl --insecure -s --request POST https://localhost:8086/api/v2/dbrps \
+  --header "Authorization: Token yourtoken" \
+  --header 'Content-type: application/json' \
+  --data '{
+        "bucketID": "xxxxxxxxxxxxx",
+        "database": "xxxx",
+        "default": true,
+        "orgID": "xxxxxxxxxxxxxxxx",
+        "retention_policy": "autogen"
+      }'

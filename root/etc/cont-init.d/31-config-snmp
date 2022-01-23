@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+# add snamptranslate to $PATH
+export PATH="/usr/bin/snmptranslate:$PATH"
+# make sure snmp loads all MIB modules from /config/.snmp/mibs/
+sed -i 's/mibs :/# mibs :/g' /etc/snmp/snmp.conf
+
+mkdir -p /config/.snmp/mibs

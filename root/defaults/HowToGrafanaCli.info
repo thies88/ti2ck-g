@@ -1,0 +1,3 @@
+example:
+
+grafana-cli --pluginsDir /config/grafana/data/plugins plugins install grafana-piechart-panel

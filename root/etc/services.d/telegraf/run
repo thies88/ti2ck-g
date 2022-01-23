@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv bash
+
+sleep 5
+# use var ${APP} define is Dockerfile to start app
+# /bin/s6-notifyoncheck -d
+# s6-setuidgid abc
+
+# Use s6 or not. To use add: s6-setuidgid leave black to not use
+USE_S6=s6-setuidgid
+
+# 1 or 0 to use or not
+#APP_DEBUGMODE=0
+
+#use var ${APP} to strat app
+# /bin/s6-notifyoncheck -d
+# s6-setuidgid abc
+
+#cd /storage
+if [ "${APP_DEBUGMODE}" -eq 1 ]; then
+  exec $USE_S6 $APP_PATH abc ${APP2} >> ${LOG2}
+else
+  exec $USE_S6 $APP_PATH abc ${APP2}
+fi

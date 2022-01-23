@@ -1,0 +1,5 @@
+[[inputs.http_response]]
+    urls = ["https://www.google.nl","https://www.vmware.com/","https://www.veeam.com/","https://github.com/","https://www.microsoft.com/en-gb/","https://192.168.5.1","https://192.168.5.200:8007"]
+    response_timeout = "10s"
+    method = "GET"
+    follow_redirects = false
